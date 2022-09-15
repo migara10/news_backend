@@ -18,7 +18,6 @@ const handleErrors = (err) => {
 // create news
 module.exports.createNews = async (req, res) => {
     // let newNews = new newsModel(req.body)
-    console.log(req.body)
     const newNews = new newsModel({
         author: req.body.author,
         category: req.body.category,
@@ -72,6 +71,32 @@ module.exports.getAllNews = (req, res) => {
         }
     })
 }
+// get news headlings
+module.exports.getAllNewsHeadlings = async (req, res) => {
+    try {
+        const query = { isDeleted: true }
+        const allHeeadlings = await newsModel.find(query).sort('-updatedAt').limit(8)
+        res.send({ news: allHeeadlings })
+    } catch {
+        res.status(400).json({ state: false, msg: 'cant get news headlings' })
+    }
+}
+// get news category
+module.exports.getAllNewsByCategory = async (req, res) => {
+    try {
+        const query = { isDeleted: true }
+        const query2 = { category: req.params.value }
+        const allNews = await newsModel.find({
+            "$and": [query, query2]
+        })
+        /* userModal.find({
+            "$and": [{ "$or": [query, query2] }, { "$or": [query3] }]
+        }, callback) */
+        res.send({ news: allNews })
+    } catch {
+        res.status(400).json({ state: false, msg: 'cant get news by category' })
+    }
+}
 
 // unpublish news
 module.exports.unPublishNews = async (req, res) => {
@@ -88,9 +113,10 @@ module.exports.unPublishNews = async (req, res) => {
 // publish news
 module.exports.publishNews = async (req, res) => {
     const uId = req.params.id
+    let newNews = new newsModel(req.params)
     try {
         const query = { _nId: uId }
-        await newsModel.updateOne(query, { isDeleted: true })
+        await newsModel.updateOne(query, { isDeleted: true, updatedAt:new Date() })
         res.status(200).json({ state: true, msg: 'news publish successfully' })
     } catch {
         res.status(400).json({ state: false, msg: 'news publish unsuccessfully' })

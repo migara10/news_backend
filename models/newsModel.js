@@ -13,7 +13,7 @@ const newsSchema = new Schema({
     category: {
         type: String,
         required: [true, "news category must be required"],
-        enum: ['sports', 'tech'],
+        // enum: ['sports', 'tech'],
         default: 'sports',
     },
     heading: {

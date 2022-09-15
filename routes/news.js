@@ -17,17 +17,12 @@ const upload = multer({
 })
 
 
-// router.post('/',validate.varyToken, newsController.createNews) // add news
-router.get('/', validate.varyToken, newsController.getAllNews) // get news
+router.post('/', validate.varyToken,upload.single('file'), newsController.createNews) // add news
+router.get('/', validate.varyToken,  newsController.getAllNews) // get news
+router.get('/headline',  newsController.getAllNewsHeadlings) // get news headlings
+router.get('/:value',  newsController.getAllNewsByCategory) // get news by category
 router.put('/:id', validate.varyToken, newsController.editNews) // edit news
 router.delete('/publish/:id', validate.varyToken, newsController.publishNews) // publish
 router.delete('/unpublish/:id', validate.varyToken, newsController.unPublishNews) // unpublish
 
-/* router.post('/', upload.single('profile'), (req,res) => {
-    console.log(req.file)
-    console.log(req.body)
-    console.log(req.file.filename)
-    console.log(req.body.desc)
-}) */
-router.post('/', validate.varyToken,upload.single('file'), newsController.createNews)
 module.exports = router
