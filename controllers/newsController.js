@@ -88,10 +88,7 @@ module.exports.getAllNewsByCategory = async (req, res) => {
         const query2 = { category: req.params.value }
         const allNews = await newsModel.find({
             "$and": [query, query2]
-        })
-        /* userModal.find({
-            "$and": [{ "$or": [query, query2] }, { "$or": [query3] }]
-        }, callback) */
+        }).sort('-updatedAt')
         res.send({ news: allNews })
     } catch {
         res.status(400).json({ state: false, msg: 'cant get news by category' })
